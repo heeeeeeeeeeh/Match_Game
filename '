@@ -82,7 +82,7 @@ function incrementCounter(counterName, parentElement) {
   /* Step 2: Increment the counter for 'counterName'. */
   counters[counterName]++
   /* Step 3: Change the HTML within 'parentElement' to display the new counter value. */
-  parentElement.innerText = `${counters[counterName]}: ${counterName}`
+  parentElement.innerText = `${counters[counterName]} ${counterName}`
 }
 incrementCounterTest();
 
@@ -91,47 +91,24 @@ let lastCardFlipped = null;
 
 function onCardFlipped(newlyFlippedCard) {
   /* Step 1: Use the 'incrementCounter' function to add one to the flip counter UI.  */
-  incrementCounter("flips",document.querySelector("#flip-count"))
+  incrementCounter("flips")
   /* Step 2: If 'lastCardFlipped' is null (this is the first card flipped), update 'lastCardFlipped' and return (nothing else to do) */
-  if(lastCardFlipped == null) {
-    lastCardFlipped = newlyFlippedCard; 
-    return
-  }
   /* If the above condition was not met, we know there are two cards flipped that should be stored in 'lastCardFlipped' and 'newlyFlippedCard', respectively. */
   /* Step 3: If the cards don't match, remove the "flipped" class from each, reset 'lastCardFlipped' to null, and use a 'return' to exit the function. Remember that newlyFlippedCard and lastCardFlipped are both objects made with the createCards function. This means that, to access each card's classList, you must access the card object's .element property first!  */
-  if (!doCardsMatch(newlyFlippedCard,lastCardFlipped))
-  {
-    newlyFlippedCard.remove("flipped")
-    lastCardFlipped.remove("flipped")
-    return
-  }
   /* Step 4: Now we have two matching cards. Increment the match counter and optionally add a "glow" effect to the matching cards. */
-  incrementCounter("matches",document.querySelector("#match-count"))
   /* Step 5: Play either the win audio or match audio based on whether the user has the number of matches needed to win. Both sounds have been loaded in provided.js as matchAudio and winAudio, respectively. */
-  if(counters["matches"] == 12) winAudio.play()
-  else matchAudio.play()
   /* Step 6: Reset 'lastCardFlipped' to null */
-  lastCardFlipped = null
 }
 
 /* This function should remove all children from the #card-container, reset the flip and match counts displayed in the HTML, reset the counters dictionary to an empty object, reset lastCardFlipped to null, and set up a new game. */
 function resetGame() {
   /* Step 1: Get the card container by its id and store it in a variable. */
-  cardContainer = document.querySelector("#card-container")
   /* Step 2: Clear all the cards by using a while loop to remove the first child of the card container as long as a first child exists.
 	See "To remove all children from an element:" in the Examples section of the MDN removeChild documentation -> https://mzl.la/3bklFxP */
-  while(cardContainer.children[0]) {
-    cardContainer.pop()
-  }
   /* Step 3: Get the HTML elements that display the flip and match counts and reset their inner text to 0. */
-  document.querySelector("#flip-count").innerText = ""
-  document.querySelector("#match-count").innerText = ""
   /* Step 4: Reassign the value of the `counters` dictionary to an empty object  */
-  counters = {}
   /* Step 5: Set lastCardFlipped back to null. */
-  lastCardFlipped = null
   /* Step 6: Set up a new game. */
-  setUpGame();
 }
 
 // ⛔️ Set up the game. Do not edit below this line! ⛔
