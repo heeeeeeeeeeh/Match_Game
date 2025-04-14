@@ -2,7 +2,7 @@ function createNewCard() {
   /* Step 1: Create a new div element and assign it to a variable called cardElement. */
   let cardElement = document.createElement("div")
   /* Step 2: Add the "card" class to the variable 'cardElement' from the previous step. */
-  cardElement.classList("card")
+  cardElement.classList.add("card")
   /* Step 3: Write the HTML for the children of the card element (card-down and card-up) as a normal string and assign it as the innerHTML of cardElement. */
   cardElement.innerHTML = `<div class="card-down"></div>
     <div class="card-up">`
@@ -24,6 +24,11 @@ appendNewCardTest();
 
 function shuffleCardImageClasses() {
   /* Step 1: Create a new array that contains two of each image class string in order (e.g. "image-1", "image-1", "image-2", "image-2"...). Store the array in a variable called 'cardClasses'.  */
+  imagesStr = []
+  for (i of Array(5).keys()) {
+     imagesStr.push(`image-${i+1}`)
+     imagesStr.push(`image-${i+1}`)
+  }
   /* Step 2: We're going to use a library to randomly "shuffle" the array we created. The library is called "underscore.js" because it uses an "_" character as an object to contain helper methods. Load underscore.js in your HTML via the CDN then open up the documentation linked below to learn how to use the 'shuffle' method.  
          
   CDN: https://cdnjs.com/libraries/underscore.js/1.4.1
@@ -31,11 +36,6 @@ function shuffleCardImageClasses() {
  
   NOTE: Ignore the "require" syntax shown in the documentation as this is for non-browser environments. The '_' variable will already be available to you from loading the CDN. */
   /* Step 3: Return the shuffled array of class names. */
-  imagesStr = []
-  for (i of Array(5).keys()) {
-     imagesStr.push(`image-${i+1}`)
-     imagesStr.push(`image-${i+1}`)
-  }
   return _.shuffle(imagesStr)
 }
 shuffleCardImageClassesTest()
