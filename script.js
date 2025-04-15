@@ -46,7 +46,7 @@ function createCards(parentElement, shuffledImageClasses) {
   /* Step 2: Write a for loop that loops 12 times to create the 12 cards we need. */
   for (_ of Array(11).keys()) {
   /* Step 2(a): Use appendNewCard to create/append a new card and store the result in a variable. */
-    cardElement = appendNewCard()
+    cardElement = appendNewCard(parentElement)
   /* Step 2(b): Add an image class to the new card element using shuffledImageClasses[i]. */
    cardElement.classList.add(shuffledImageClasses[i])
   /* Step 2(c): Append a new object to the card object array. The object should contain the following properties:
