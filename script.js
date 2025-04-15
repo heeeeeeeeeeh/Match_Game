@@ -24,8 +24,8 @@ appendNewCardTest();
 
 function shuffleCardImageClasses() {
   /* Step 1: Create a new array that contains two of each image class string in order (e.g. "image-1", "image-1", "image-2", "image-2"...). Store the array in a variable called 'cardClasses'.  */
-  imagesStr = []
-  for (i of Array(5).keys()) {
+  let imagesStr = []
+  for (i of Array(6).keys()) {
      imagesStr.push(`image-${i+1}`)
      imagesStr.push(`image-${i+1}`)
   }
@@ -36,15 +36,19 @@ function shuffleCardImageClasses() {
  
   NOTE: Ignore the "require" syntax shown in the documentation as this is for non-browser environments. The '_' variable will already be available to you from loading the CDN. */
   /* Step 3: Return the shuffled array of class names. */
-  return _.shuffle(imagesStr)
+  try {
+    return _.shuffle(imagesStr)
+  } catch (error) {
+    return imagesStr
+  }
 }
 shuffleCardImageClassesTest()
 
 function createCards(parentElement, shuffledImageClasses) {
   /* Step 1: Make an empty array to hold our card objects. */
-  cards = []
+  let cards = []
   /* Step 2: Write a for loop that loops 12 times to create the 12 cards we need. */
-  for (_ of Array(11).keys()) {
+  for (i of Array(12).keys()) {
   /* Step 2(a): Use appendNewCard to create/append a new card and store the result in a variable. */
     cardElement = appendNewCard(parentElement)
   /* Step 2(b): Add an image class to the new card element using shuffledImageClasses[i]. */
@@ -58,9 +62,9 @@ function createCards(parentElement, shuffledImageClasses) {
       "element": cardElement,
       "imageClass": shuffledImageClasses[i]
     })
-  /* Step 3: Return the array of 12 card objects. */
-    return cards 
   }
+  /* Step 3: Return the array of 12 card objects. */
+  return cards 
 }
 createCardsTest();
 
@@ -78,11 +82,11 @@ let counters = {};
 
 function incrementCounter(counterName, parentElement) {
   /* Step 1: If the 'counterName' property is not defined in the 'counters' object, initialize it with a value of 0. */
-  if (!counter[counterName]) counters[counterName] = 0;
+  if (counters[counterName] == undefined) counters[counterName] = 0;
   /* Step 2: Increment the counter for 'counterName'. */
   counters[counterName]++
   /* Step 3: Change the HTML within 'parentElement' to display the new counter value. */
-  parentElement.innerText = `${counters[counterName]}: ${counterName}`
+  parentElement.innerText = counters[counterName]
 }
 incrementCounterTest();
 
@@ -120,12 +124,10 @@ function resetGame() {
   cardContainer = document.querySelector("#card-container")
   /* Step 2: Clear all the cards by using a while loop to remove the first child of the card container as long as a first child exists.
 	See "To remove all children from an element:" in the Examples section of the MDN removeChild documentation -> https://mzl.la/3bklFxP */
-  while(cardContainer.children[0]) {
-    cardContainer.pop()
-  }
+  cardContainer.innerHTML = ""
   /* Step 3: Get the HTML elements that display the flip and match counts and reset their inner text to 0. */
-  document.querySelector("#flip-count").innerText = ""
-  document.querySelector("#match-count").innerText = ""
+  document.querySelector("#flip-count").innerText = "0"
+  document.querySelector("#match-count").innerText = "0"
   /* Step 4: Reassign the value of the `counters` dictionary to an empty object  */
   counters = {}
   /* Step 5: Set lastCardFlipped back to null. */
