@@ -103,19 +103,23 @@ function onCardFlipped(newlyFlippedCard) {
   }
   /* If the above condition was not met, we know there are two cards flipped that should be stored in 'lastCardFlipped' and 'newlyFlippedCard', respectively. */
   /* Step 3: If the cards don't match, remove the "flipped" class from each, reset 'lastCardFlipped' to null, and use a 'return' to exit the function. Remember that newlyFlippedCard and lastCardFlipped are both objects made with the createCards function. This means that, to access each card's classList, you must access the card object's .element property first!  */
+    console.log(lastCardFlipped)
+    console.log(newlyFlippedCard)
   if (!doCardsMatch(newlyFlippedCard,lastCardFlipped))
   {
-    newlyFlippedCard.remove("flipped")
-    lastCardFlipped.remove("flipped")
+    newlyFlippedCard.element.classList.remove("flipped")
+    lastCardFlipped.element.classList.remove("flipped")
+    lastCardFlipped = null
     return
   }
   /* Step 4: Now we have two matching cards. Increment the match counter and optionally add a "glow" effect to the matching cards. */
   incrementCounter("matches",document.querySelector("#match-count"))
   /* Step 5: Play either the win audio or match audio based on whether the user has the number of matches needed to win. Both sounds have been loaded in provided.js as matchAudio and winAudio, respectively. */
-  if(counters["matches"] == 12) winAudio.play()
-  else matchAudio.play()
+  if(counters["matches"] == 12) winAudio.play();
+  else matchAudio.play();
   /* Step 6: Reset 'lastCardFlipped' to null */
   lastCardFlipped = null
+  console.log(lastCardFlipped)
 }
 
 /* This function should remove all children from the #card-container, reset the flip and match counts displayed in the HTML, reset the counters dictionary to an empty object, reset lastCardFlipped to null, and set up a new game. */
