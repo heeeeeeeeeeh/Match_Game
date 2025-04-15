@@ -120,7 +120,7 @@ h1 {
     box-shadow: none;
   }
 
-  80% {
+  60% {
     border-color: blue;
     box-shadow: 0 0 10px blue;
   }
