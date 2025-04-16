@@ -4,6 +4,8 @@ const ENDPOINT="https://pokeapi.co/api/v2/pokemon/"
 // special forms like alola and mega
 // https://pokeapi.co/api/v2/pokemon/?offset=1020&limit=400
 const MAX_POKEMON=(await axios.get('https://pokeapi.co/api/v2/pokemon/')).data.count 
+const ORIGINAL_CARD_WIDTH=480
+const ORIGINAL_CARD_HEIGHT=650
 const CARD_WIDTH=250
 const CARD_HEIGHT=350
 const MAX_MAINLINE_POKEMON = Number((await axios.get('https://pokeapi.co/api/v2/pokemon-species/')).data.count);
@@ -51,7 +53,7 @@ async function  getPokemon(id) {
 async function addRule(index,pokemon) {
   let sprite = await fetch(pokemon.sprites.other.home.front_default) 
   let base = await fetchCard(pokemon)
-  let img = await createImage(base,sprite)
+  let img = await createImage(base,sprite,pokemon.name)
   let imgURL = createImageURL(img)
   let sheet = document.styleSheets[1]
   let rule = `.image-${index+ 1} .card-up {
@@ -80,17 +82,24 @@ async function fetchCard(pokemon) {
   }
   return fetch(`https://pokecardmaker.net/_next/image?url=%2Fassets%2Fcards%2FbaseSets%2F${gen}%2Fsupertypes%2Fpokemon%2Ftypes%2Fcolorless%2Fsubtypes%2Fbasic.png&w=480&q=100`)
 }
-async function createImage(baseResponse, spriteResponse) {
+async function createImage(baseResponse, spriteResponse, name) {
   const baseContent = new Uint8Array(await baseResponse.arrayBuffer());
   const spriteContent = new Uint8Array(await spriteResponse.arrayBuffer());
 
   let base = {name:"base.png",content:baseContent}
   let sprite = {name:"sprite.png",content:spriteContent}
+  
+  let spriteWidth = ORIGINAL_CARD_WIDTH/3
+  let spriteHeight = ORIGINAL_CARD_WIDTH/3
 
-  let command = ["convert", "base.png", "sprite.png",  "-gravity", "center", "-geometry", "256x256+0+0", "-composite" ,"-resize", "250x350", "output.png"]
-  const img = await Magick.Call([base,sprite],command)
-
-  return img[0];
+  let command = ["convert", "base.png", "sprite.png",  "-gravity", "center", "-geometry", `${spriteWidth}x${spriteHeight}+0-${spriteHeight}`, "-composite" ,"-resize", `${CARD_WIDTH}x${CARD_HEIGHT}`, "card.png"]
+  let card = (await Magick.Call([base,sprite],command))[0]
+  card.content = card.buffer
+  
+  let textSize = CARD_HEIGHT/10 
+  command = ["convert", "card.png", "-gravity", "North", "-pointsize",`${textSize}`,"-annotate","+0+0",name,"output.png"]
+  let output = (await Magick.Call([card], command))[0]
+  return output
 }
 function createImageURL(image) {
   return  URL.createObjectURL(image.blob)
@@ -100,6 +109,8 @@ export function removeRules() {
   let ruleArr =  Array.from(sheet.cssRules)
   for ([index,rule] of ruleArr.entries()){
     if(/image-[1-6] \.card-up/.test(rule.selectorText)) {
+      blob = document.styleSheets[1].cssRules[1].style.backgroundImage
+      URL.revokeObjectURL(blob.match('"blob:(.*)"')[1])
       sheet.deleteRule(index)
     } 
   }
