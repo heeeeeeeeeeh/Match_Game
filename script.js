@@ -139,8 +139,27 @@ function resetGame() {
   /* Step 5: Set lastCardFlipped back to null. */
   lastCardFlipped = null
   /* Step 6: Set up a new game. */
+  scr = document.createElement("script")
+  scr.type = "module"
+  scr.innerText = 
+    'import { addRules,removeRules } from "image.js";removeRules();addRules()'
   setUpGame();
 }
 
+function pickGeneration() {
+  document.querySelector("#game-container").classList.add("d-none")
+  for (generation of document.querySelectorAll(".dropdown-center li")) {
+      generation.onclick =  (e) => {
+      document.querySelector("#selected-gen").innerText = e.target.innerText
+      document.querySelector("li.disabled").classList.remove("disabled")
+      e.target.classList.add("disabled")
+    }
+  }
+  document.querySelector("#start").onclick = (e) => {
+    e.target.parentElement.classList.add("d-none")
+    document.querySelector("#game-container").classList.remove("d-none")
+  }
+}
 // ⛔️ Set up the game. Do not edit below this line! ⛔
 setUpGame();
+pickGeneration()

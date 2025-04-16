@@ -1,6 +1,6 @@
 :root {
-  --card-width: 125px;
-  --card-height: 175px;
+  --card-width: 250px;
+  --card-height: 350px;
 }
 
 body {
@@ -85,29 +85,29 @@ h1 {
   transform: rotateY(0deg);
 }
 
-.image-1 .card-up {
-  background-image: url(img/image-1.png), linear-gradient(#72dbf4, #72dbf4);
-}
-
-.image-2 .card-up {
-  background-image: url(img/image-2.png), linear-gradient(#72dbf4, #72dbf4);
-}
-
-.image-3 .card-up {
-  background-image: url(img/image-3.png), linear-gradient(#72dbf4, #72dbf4);
-}
-
-.image-4 .card-up {
-  background-image: url(img/image-4.png), linear-gradient(#72dbf4, #72dbf4);
-}
-
-.image-5 .card-up {
-  background-image: url(img/image-5.png), linear-gradient(#72dbf4, #72dbf4);
-}
-
-.image-6 .card-up {
-  background-image: url(img/image-6.png), linear-gradient(#72dbf4, #72dbf4);
-}
+/* .image-1 .card-up { */
+/*   background-image: url(img/image-1.png), linear-gradient(#72dbf4, #72dbf4); */
+/* } */
+/**/
+/* .image-2 .card-up { */
+/*   background-image: url(img/image-2.png), linear-gradient(#72dbf4, #72dbf4); */
+/* } */
+/**/
+/* .image-3 .card-up { */
+/*   background-image: url(img/image-3.png), linear-gradient(#72dbf4, #72dbf4); */
+/* } */
+/**/
+/* .image-4 .card-up { */
+/*   background-image: url(img/image-4.png), linear-gradient(#72dbf4, #72dbf4); */
+/* } */
+/**/
+/* .image-5 .card-up { */
+/*   background-image: url(img/image-5.png), linear-gradient(#72dbf4, #72dbf4); */
+/* } */
+/**/
+/* .image-6 .card-up { */
+/*   background-image: url(img/image-6.png), linear-gradient(#72dbf4, #72dbf4); */
+/* } */
 
 .glow {
   border: 1px solid transparent;
