@@ -113,12 +113,10 @@ function onCardFlipped(newlyFlippedCard) {
   }
   /* Step 4: Now we have two matching cards. Increment the match counter and optionally add a "glow" effect to the matching cards. */
   incrementCounter("matches",document.querySelector("#match-count"))
-  newlyFlippedCard.element.classList.add("glow")
-  lastCardFlipped.element.classList.add("glow")
   newlyFlippedCard.element.classList.add("border-glow")
   lastCardFlipped.element.classList.add("border-glow")
   /* Step 5: Play either the win audio or match audio based on whether the user has the number of matches needed to win. Both sounds have been loaded in provided.js as matchAudio and winAudio, respectively. */
-  if(counters["matches"] == 12) winAudio.play();
+  if(counters["matches"] == 6) winAudio.play();
   else matchAudio.play();
   /* Step 6: Reset 'lastCardFlipped' to null */
   lastCardFlipped = null
@@ -148,7 +146,7 @@ function resetGame() {
 
 function pickGeneration() {
   document.querySelector("#game-container").classList.add("d-none")
-  for (generation of document.querySelectorAll(".dropdown-center li")) {
+  for (let generation of document.querySelectorAll(".dropdown-center li")) {
       generation.onclick =  (e) => {
       document.querySelector("#selected-gen").innerText = e.target.innerText
       document.querySelector("li.disabled").classList.remove("disabled")
@@ -161,5 +159,5 @@ function pickGeneration() {
   }
 }
 // ⛔️ Set up the game. Do not edit below this line! ⛔
-setUpGame();
+setUpGame()
 pickGeneration()
