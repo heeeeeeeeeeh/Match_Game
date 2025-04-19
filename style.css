@@ -155,3 +155,40 @@ h1 {
   cursor: pointer;
   background-color: #534a3d;
 }
+
+#progress-container {
+  width: 80%;
+  height: 10vh;
+  border: 1px solid #000;
+  border-radius: 20px;
+  position: relative;
+}
+
+#loaded-images {
+  /* position: absolute; */
+  /* top: 0; */
+  /* left: 0; */
+  /* width: 0%; */
+  /* height: 10vh; */
+  /* background: #2B32B2; */
+  /* border-radius: 20px; */
+  /* background: -webkit-linear-gradient(to-right,#1488CC,#2B32B2); */
+  /* background: linear-gradient(to-right, #1488CC,#2B32B2); */
+  position: absolute;
+  width: 0%;
+  height: 10%vh;
+  top: 0;
+  left: 0;
+  background: #12c2e9;
+  border-radius: 20px;
+  background: -webkit-linear-gradient(to right, #f64f59, #c471ed, #12c2e9);
+  background: linear-gradient(to right, #f64f59, #c471ed, #12c2e9);
+}
+
+#indicator {
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}

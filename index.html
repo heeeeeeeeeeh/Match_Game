@@ -30,6 +30,15 @@
       </div>
       <button type="button" id="start" class="btn btn-secondary mt-4">Start</button>
     </div>
+    <section id="image-load" class="container text-center justify-content-center">
+      <h2>Loading images...</h2>
+      <div id="progress-container" min="0" max="6" class="mx-auto">
+        <div id="loaded-images">
+          <div id="indicator">
+          </div>
+        </div>
+      </section>
+    <div>
     <section id="game-container">
       <!-- This is where we display the flip and match counters -->
       <div id="ui-container">
@@ -42,7 +51,7 @@
     </section>
 
     <div class="btn-container">
-      <button class="reset-btn" onclick="resetGame()">Reset</button>
+      <button id="reset" class="reset-btn" onclick="resetGame()">Reset</button>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>    
     <script src="image.js" type="module"></script>

@@ -60,6 +60,9 @@ async function addRule(index,pokemon) {
   background-image: url(${imgURL});
   `
   sheet.insertRule(rule)
+  let percent = 100*index/6
+  document.querySelector("#loaded-images").style.width = `${percent}%`
+  document.querySelector("#indicator").innerText = `${percent.toPrecision(2)}`
 }
 async function fetchCard(pokemon) {
   let gen = GENERATIONS[document.querySelector("#selected-gen").innerText.trim()]
@@ -115,4 +118,26 @@ export function removeRules() {
     } 
   }
 }
-await addRules()
+function pickGeneration() {
+  document.querySelector("#game-container").classList.add("d-none")
+  document.querySelector("#reset").classList.add("d-none")
+  document.querySelector("#image-load").classList.add("d-none")
+  for (let generation of document.querySelectorAll(".dropdown-center li")) {
+      generation.onclick =  (e) => {
+      document.querySelector("#selected-gen").innerText = e.target.innerText
+      document.querySelector("li.disabled").classList.remove("disabled")
+      e.target.classList.add("disabled")
+    }
+  }
+}
+pickGeneration()
+document.querySelector("#start").onclick = (e) => {
+  e.target.parentElement.classList.add("d-none")
+  document.querySelector("#image-load").classList.remove("d-none")
+  addRules().then(() => {
+    document.querySelector("#image-load").classList.add("d-none")
+    document.querySelector("#game-container").classList.remove("d-none")
+    document.querySelector("#reset").classList.remove("d-none")
+    setUpGame()
+  })
+}
