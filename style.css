@@ -86,6 +86,7 @@ h1,h2,h3.pokefont {
   width: var(--card-width);
   height: var(--card-height);
   border: 2px solid transparent;
+  background: linear-gradient(to right, #FF416C,#FF4B2B);
   overflow: hidden;
 }
 
@@ -212,8 +213,8 @@ h1,h2,h3.pokefont {
   background: #12c2e9;
   border-radius: 20px;
   background: -webkit-linear-gradient(to right, #f64f59, #c471ed, #12c2e9);
-  /* background: linear-gradient(to right, #f64f59, #c471ed, #12c2e9); */
-  background: linear-gradient(#ff416c,#9b539f,#38537b);
+  /* background: linear-gradient(to right,#f12711,#f5af19); */
+  background: linear-gradient(to right, #00b4db, #0083b0); 
 }
 
 #indicator {
