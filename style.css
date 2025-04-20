@@ -3,19 +3,58 @@
   --card-height: 350px;
 }
 
+@font-face {
+  font-family: pokemon solid;
+  src: url("pokemon_solid-webfont.3ab782ec.woff2") format("woff2"), url("pokemon_solid-webfont.c9bd6317.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+span {
+  display: inline-block;
+}
+
+html, body {
+  margin: 0;
+}
+
+span.antiClockwise {
+  transform: rotate(-10deg);
+}
+
+span.clockwise {
+  transform: rotate(10deg);
+}
+
+span.mid {
+  position: relative;
+}
+
 body {
   margin: 0;
-  background: url(img/background.png);
-  background-position: center;
-  background-size: cover;
   color: #5e5447;
   font-family: "Kanit", sans-serif;
   text-shadow: 2px 2px 3px rgb(177, 177, 177);
-  min-height: 100vh;
+  /* background: #FE4818; */
+  background: linear-gradient(to right, #FF416C,#FF4B2B)
 }
 
-h1 {
-  font-size: 60px;
+ul.dropdown-menu.show {
+  background-color: #6C757D;
+}
+
+ul li {
+  color: white !important;
+}
+
+.dropdown-item:hover {
+  background-color: dodgerblue;
+}
+
+h1,h2,h3.pokefont {
+  -webkit-text-stroke: 3px navy;
+  color: #FADA08;
+  font-family: pokemon solid;
   text-align: center;
 }
 
@@ -165,15 +204,6 @@ h1 {
 }
 
 #loaded-images {
-  /* position: absolute; */
-  /* top: 0; */
-  /* left: 0; */
-  /* width: 0%; */
-  /* height: 10vh; */
-  /* background: #2B32B2; */
-  /* border-radius: 20px; */
-  /* background: -webkit-linear-gradient(to-right,#1488CC,#2B32B2); */
-  /* background: linear-gradient(to-right, #1488CC,#2B32B2); */
   position: absolute;
   width: 0%;
   height: 10%vh;
@@ -182,7 +212,8 @@ h1 {
   background: #12c2e9;
   border-radius: 20px;
   background: -webkit-linear-gradient(to right, #f64f59, #c471ed, #12c2e9);
-  background: linear-gradient(to right, #f64f59, #c471ed, #12c2e9);
+  /* background: linear-gradient(to right, #f64f59, #c471ed, #12c2e9); */
+  background: linear-gradient(#ff416c,#9b539f,#38537b);
 }
 
 #indicator {
@@ -191,4 +222,14 @@ h1 {
   justify-content: center;
   align-items: center;
   font-weight: bold;
+}
+
+.card-up {
+  position: relative;
+}
+
+.card-up p {
+  position: absolute;
+  left: calc(var(--card-width)/10px);
+  top: 0;
 }

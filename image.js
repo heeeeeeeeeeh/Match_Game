@@ -25,6 +25,14 @@ const OVERRIDE_TYPES = {
 const TYPE_BASE = "https://pokecardmaker.net/assets/icons/types/"
 //https://card-pokemon.com/
 import * as Magick from 'https://knicknic.github.io/wasm-imagemagick/magickApi.js';
+function calCardLength() {
+  totalWidth = document.body.clientWidth
+  cardsWidth = document.querySelector("#card-container").clientWidth
+  totalWidth = document.body.clientWidth
+  if(cardsWidth > totalWidth) {
+      margin = 1
+  }
+}
 export async function addRules() {
   for (i of Array(6).keys()) {
     let id = getId()
@@ -51,24 +59,60 @@ async function  getPokemon(id) {
   return (await axios.get(`${ENDPOINT}${id}`)).data
 }
 async function addRule(index,pokemon) {
-  let sprite = await fetch(pokemon.sprites.other.home.front_default) 
-  let base = await fetchCard(pokemon)
-  let img = await createImage(base,sprite,pokemon.name)
-  let imgURL = createImageURL(img)
+  let imgURL = await createImage(index,pokemon)
   let sheet = document.styleSheets[1]
   let rule = `.image-${index+ 1} .card-up {
-  background-image: url(${imgURL});
+    background-image: url(${imgURL});
   `
   sheet.insertRule(rule)
+} 
+async function createImage(index,pokemon) {
   let percent = 100*index/6
-  document.querySelector("#loaded-images").style.width = `${percent}%`
+  let currentPercent = Number(document.querySelector("#indicator").innerText)
+  let sprite = null
+  if(pokemon.sprites.other["official-artwork"].front_default) {
+    sprite = await fetch(pokemon.sprites.other["official-artwork"].front_default) 
+  }
+  else {
+    sprite = await fetch(pokemon.sprites.front_default)
+  }
+  let midPoint = currentPercent + (percent-currentPercent)/2
+  updateProgressBar(midPoint)
+  let base = await fetchCard(pokemon)
+  let img = await overlapImage(base,sprite,pokemon.name)
+  let imgURL = createImageURL(img)
+  updateProgressBar(percent)
+  return imgURL
+}
+function updateProgressBar(percent) {
+  let progressBar = document.querySelector("#loaded-images")
+  progressBar.style.width = `${percent}%` 
   document.querySelector("#indicator").innerText = `${percent.toPrecision(2)}`
+}
+async function overlapImage(baseResponse, spriteResponse, name) {
+  const baseContent = new Uint8Array(await baseResponse.arrayBuffer());
+  const spriteContent = new Uint8Array(await spriteResponse.arrayBuffer());
+
+  let base = {name:"base.png",content:baseContent}
+  let sprite = {name:"sprite.png",content:spriteContent}
+  
+  let spriteWidth = ORIGINAL_CARD_WIDTH/3
+  let spriteHeight = ORIGINAL_CARD_HEIGHT/3
+
+  let command = ["convert", "base.png", "sprite.png",  "-gravity", "center", "-geometry", `${spriteWidth}x${spriteHeight}+0-${spriteHeight/2}`, "-composite" ,"-resize", `${CARD_WIDTH}x${CARD_HEIGHT}`, "card.png"]
+  let card = (await Magick.Call([base,sprite],command))[0]
+  
+  // does not work because wasm-imagemagick
+  // is not compiled with freetype
+  // let textSize = CARD_HEIGHT/10 
+  // command = ["convert", "card.png", "-gravity", "North", "-pointsize",`${textSize}`,"-annotate","+0+0",name,"output.png"]
+  // let output = (await Magick.Call([card], command))[0]
+  return card
 }
 async function fetchCard(pokemon) {
   let gen = GENERATIONS[document.querySelector("#selected-gen").innerText.trim()]
   let GEN_TYPES = `${TYPE_BASE}${gen}`
   for (let type of pokemon.types) {
-    console.log(`${pokemon.name} type: ${type.type.name}`)
     try {
       await fetch(`${GEN_TYPES}/${type.type.name}.png`)
       let cardURL = `https://pokecardmaker.net/_next/image?url=%2Fassets%2Fcards%2FbaseSets%2F${gen}%2Fsupertypes%2Fpokemon%2Ftypes%2F${type.type.name}%2Fsubtypes%2Fbasic.png&w=480&q=100`
@@ -85,43 +129,10 @@ async function fetchCard(pokemon) {
   }
   return fetch(`https://pokecardmaker.net/_next/image?url=%2Fassets%2Fcards%2FbaseSets%2F${gen}%2Fsupertypes%2Fpokemon%2Ftypes%2Fcolorless%2Fsubtypes%2Fbasic.png&w=480&q=100`)
 }
-async function createImage(baseResponse, spriteResponse, name) {
-  const baseContent = new Uint8Array(await baseResponse.arrayBuffer());
-  const spriteContent = new Uint8Array(await spriteResponse.arrayBuffer());
-
-  let base = {name:"base.png",content:baseContent}
-  let sprite = {name:"sprite.png",content:spriteContent}
-  
-  let spriteWidth = ORIGINAL_CARD_WIDTH/3
-  let spriteHeight = ORIGINAL_CARD_WIDTH/3
-
-  let command = ["convert", "base.png", "sprite.png",  "-gravity", "center", "-geometry", `${spriteWidth}x${spriteHeight}+0-${spriteHeight}`, "-composite" ,"-resize", `${CARD_WIDTH}x${CARD_HEIGHT}`, "card.png"]
-  let card = (await Magick.Call([base,sprite],command))[0]
-  card.content = card.buffer
-  
-  let textSize = CARD_HEIGHT/10 
-  command = ["convert", "card.png", "-gravity", "North", "-pointsize",`${textSize}`,"-annotate","+0+0",name,"output.png"]
-  let output = (await Magick.Call([card], command))[0]
-  return output
-}
 function createImageURL(image) {
   return  URL.createObjectURL(image.blob)
 }
-export function removeRules() {
-  let sheet = document.styleSheets[1]
-  let ruleArr =  Array.from(sheet.cssRules)
-  for ([index,rule] of ruleArr.entries()){
-    if(/image-[1-6] \.card-up/.test(rule.selectorText)) {
-      blob = document.styleSheets[1].cssRules[1].style.backgroundImage
-      URL.revokeObjectURL(blob.match('"blob:(.*)"')[1])
-      sheet.deleteRule(index)
-    } 
-  }
-}
 function pickGeneration() {
-  document.querySelector("#game-container").classList.add("d-none")
-  document.querySelector("#reset").classList.add("d-none")
-  document.querySelector("#image-load").classList.add("d-none")
   for (let generation of document.querySelectorAll(".dropdown-center li")) {
       generation.onclick =  (e) => {
       document.querySelector("#selected-gen").innerText = e.target.innerText
@@ -131,13 +142,54 @@ function pickGeneration() {
   }
 }
 pickGeneration()
-document.querySelector("#start").onclick = (e) => {
-  e.target.parentElement.classList.add("d-none")
+document.querySelector("#start").onclick = () => {
+  preSetupGame()
+}
+document.querySelector("#reset").onclick = () => {
+  document.querySelector("#generation").classList.remove("d-none")
+  document.querySelector("#game-container").classList.add("d-none")
+  document.querySelector("#reset").classList.add("d-none")
+  document.querySelector("#image-load").classList.add("d-none")
+}
+async function preSetupGame(reset=false) {
+  document.querySelector("#generation").classList.add("d-none")
+  document.querySelector("#game-container").classList.add("d-none")
+  document.querySelector("#reset").classList.add("d-none")
   document.querySelector("#image-load").classList.remove("d-none")
-  addRules().then(() => {
-    document.querySelector("#image-load").classList.add("d-none")
-    document.querySelector("#game-container").classList.remove("d-none")
-    document.querySelector("#reset").classList.remove("d-none")
-    setUpGame()
-  })
+  if (document.querySelector(".card") == null) {
+    addRules().then(() => {
+      document.querySelector("#image-load").classList.add("d-none")
+      document.querySelector("#game-container").classList.remove("d-none")
+      document.querySelector("#reset").classList.remove("d-none")
+      setUpGame()
+    })
+  }else {
+    updateProgressBar(0)
+    updateRules().then(() => {
+      document.querySelector("#image-load").classList.add("d-none")
+      document.querySelector("#game-container").classList.remove("d-none")
+      document.querySelector("#reset").classList.remove("d-none")
+      resetGame()
+    })
+  }
+}
+async function updateRules() {
+  let sheet = document.styleSheets[1]
+  let ruleArr =  Array.from(sheet.cssRules)
+  let count = 1
+  for (let [index,rule] of ruleArr.entries()){
+    if(/image-[1-6] \.card-up/.test(rule.selectorText)) {
+      let id = getId()
+      let pokemon = await getPokemon(id)
+      await updateRule(index,pokemon,count)
+      count++
+    } 
+  }
+}
+async function updateRule(index,pokemon,count) {
+    let style  = document.styleSheets[1].cssRules[index].style
+    let blob = style.backgroundImage
+    URL.revokeObjectURL(blob.match(/"blob:(.*)"/)[1])
+    let imageURL = await createImage(count,pokemon)
+    style.backgroundImage = `url(${imageURL})`
 }
