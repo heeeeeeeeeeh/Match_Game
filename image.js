@@ -26,11 +26,13 @@ const TYPE_BASE = "https://pokecardmaker.net/assets/icons/types/"
 //https://card-pokemon.com/
 import * as Magick from 'https://knicknic.github.io/wasm-imagemagick/magickApi.js';
 function calCardLength() {
-  totalWidth = document.body.clientWidth
-  cardsWidth = document.querySelector("#card-container").clientWidth
-  totalWidth = document.body.clientWidth
+  let totalWidth = document.body.clientWidth
+  let cardsWidth = window.getComputedStyle(document.querySelector("#card-container")).width
+  cardsWidth = Number(cardsWidth.substring(cardsWidth.length-2))
   if(cardsWidth > totalWidth) {
-      margin = 1
+    // make card container width 80 percent
+    let cardMargin = window.innerHeight * 0.01;
+    let cardWidth = (totalWidth*.8)/(4*cardMargin)
   }
 }
 export async function addRules() {
