@@ -61,12 +61,16 @@ async function  getPokemon(id) {
   return (await axios.get(`${ENDPOINT}${id}`)).data
 }
 async function addRule(index,pokemon) {
-  let imgURL = await createImage(index,pokemon)
-  let sheet = document.styleSheets[1]
-  let rule = `.image-${index+ 1} .card-up {
+  try {
+    let imgURL = await createImage(index,pokemon)
+    let sheet = document.styleSheets[1]
+    let rule = `.image-${index+ 1} .card-up {
     background-image: url(${imgURL});
   `
   sheet.insertRule(rule)
+  } catch (error) {
+    await addRule(index,getPokemon(getId()))
+  }
 } 
 async function createImage(index,pokemon) {
   let percent = 100*index/6
@@ -75,8 +79,10 @@ async function createImage(index,pokemon) {
   if(pokemon.sprites.other["official-artwork"].front_default) {
     sprite = await fetch(pokemon.sprites.other["official-artwork"].front_default) 
   }
-  else {
+  else if (pokemon.sprites.front_default){
     sprite = await fetch(pokemon.sprites.front_default)
+  }else {
+    throw new Error()
   }
   let midPoint = currentPercent + (percent-currentPercent)/2
   updateProgressBar(midPoint)
