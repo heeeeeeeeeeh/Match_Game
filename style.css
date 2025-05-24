@@ -232,5 +232,5 @@ h1,h2,h3.pokefont {
 .card-up p {
   position: absolute;
   left: calc(var(--card-width)/4);
-  top: calc(var(--card-height)/10);
+  top: calc(var(--card-height)/30);
 }

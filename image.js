@@ -66,7 +66,11 @@ async function addRule(index,pokemon) {
     let sheet = document.styleSheets[1]
     let rule = `.image-${index+ 1} .card-up {
     background-image: url(${imgURL});
-  `
+    }`
+  sheet.insertRule(rule)
+  rule = `.image-${index+1} .card-up p::before{
+    content: "${pokemon.name}"
+  }`
   sheet.insertRule(rule)
   } catch (error) {
     await addRule(index,getPokemon(getId()))
