@@ -6,6 +6,7 @@ function createNewCard() {
   /* Step 3: Write the HTML for the children of the card element (card-down and card-up) as a normal string and assign it as the innerHTML of cardElement. */
   cardElement.innerHTML = `<div class="card-down"></div>
     <div class="card-up">
+        <p></p>
     </div>`
 
   /* Step 4: Return the cardElement. */
